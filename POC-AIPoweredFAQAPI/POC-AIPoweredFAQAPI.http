@@ -1,0 +1,6 @@
+@POC_AIPoweredFAQAPI_HostAddress = http://localhost:5232
+
+GET {{POC_AIPoweredFAQAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
