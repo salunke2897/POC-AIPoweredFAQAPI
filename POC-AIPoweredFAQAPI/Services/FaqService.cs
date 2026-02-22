@@ -16,25 +16,22 @@ namespace POC_AIPoweredFAQAPI.Services
         private readonly IContextRetriever _contextRetriever;
         private readonly IAiClient _aiClient;
         private readonly IConversationRepository _conversationRepository;
+        private readonly IPromptValidator _promptValidator;
 
-        public FaqService(IPromptBuilder promptBuilder, IContextRetriever contextRetriever, IAiClient aiClient, IConversationRepository conversationRepository)
+        public FaqService(IPromptBuilder promptBuilder, IContextRetriever contextRetriever, IAiClient aiClient, IConversationRepository conversationRepository, IPromptValidator promptValidator)
         {
             _promptBuilder = promptBuilder;
             _contextRetriever = contextRetriever;
             _aiClient = aiClient;
             _conversationRepository = conversationRepository;
+            _promptValidator = promptValidator;
         }
 
         public async Task<FaqAskResponse> AskAsync(FaqAskRequest request, CancellationToken cancellationToken = default)
         {
-            if (request.Question is null || string.IsNullOrWhiteSpace(request.Question))
-                throw new ArgumentException("Question is required");
-
-            if (request.Question.Length > 2000) throw new ArgumentException("Question too long");
-
-            // basic injection check
-            if (Regex.IsMatch(request.Question, "<script|DROP TABLE|;--", RegexOptions.IgnoreCase))
-                throw new ArgumentException("Invalid question");
+            //Validate for prompt injection patterns
+            _promptValidator.Validate(request.Question);
+            request.Question = _promptValidator.Sanitize(request.Question);
 
             var context = await _contextRetriever.RetrieveAsync(request.Question, cancellationToken);
             var system = _promptBuilder.BuildSystemPrompt();

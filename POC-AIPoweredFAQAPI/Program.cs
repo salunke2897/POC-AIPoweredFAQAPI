@@ -21,6 +21,7 @@ builder.Services.Configure<SqliteOptions>(builder.Configuration.GetSection("Sqli
 builder.Services.Configure<RagOptions>(builder.Configuration.GetSection("Rag"));
 
 // Interfaces (Services)
+builder.Services.AddScoped<IPromptValidator, PromptInjectionValidator>();
 builder.Services.AddScoped<IFaqService, FaqService>();
 builder.Services.AddScoped<IFaqIngestionService, FaqIngestionService>();
 builder.Services.AddScoped<IPromptBuilder, PromptBuilder>();

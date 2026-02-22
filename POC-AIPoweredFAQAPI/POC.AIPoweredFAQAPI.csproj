@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>POC_AIPoweredFAQAPI</RootNamespace>
+    <UserSecretsId>fa89dcbc-9da8-4676-a00e-442aa78e71bf</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
